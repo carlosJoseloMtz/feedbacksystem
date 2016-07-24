@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="login-page">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 20px;
+      }
+      paper-button.custom:hover {
+        background-color: var(--paper-indigo-100);
+      }
+      paper-button.green {
+        background-color: var(--paper-green-500);
+        color: white;
+      }
+    </style>
+
+    <h1>Welcome to the feedback system</h1>
+    <template is="dom-if" if="{{loggedIn}}">
+      You already logged in to the system
+    </template>
+    <template is="dom-if" if="{{!loggedIn}}">
+      <form is="iron-form" method="get" action="/" on-iron-form-submit="_login" id="basic">
+        <paper-input name="email" label="Email"></paper-input>
+        <br>
+        <paper-input name="password" type="password" label="Password"></paper-input>
+        <br>
+        <paper-button raised class="custom green" on-tap="_submit">Submit</paper-button>
+      </form>
+    </template>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'login-page',
+
+      properties: {
+        loggedIn : {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      /**
+      * Handles the request to the server with the credentials.
+      */
+      _login: function (ev) {
+        console.log('requesting using credentials');
+        console.log(ev.detail);
+        // TODO: request the login session
+        // in case of success
+        // TODO: save some easy user info: email, name, userType, token
+        // in case of failure
+        // TODO: display the error message to the user
+      },
+
+      /**
+      * Just calls the submit function for the form element.
+      */
+      _submit: function (ev) {
+        Polymer.dom(ev).localTarget.parentElement.submit();
+      },
+
+    });
+
+  </script>
+
+</dom-module>
