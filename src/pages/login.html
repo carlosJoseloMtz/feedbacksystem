@@ -20,13 +20,13 @@
       }
     </style>
 
-    <h1>Welcome to the feedback system</h1>
+    <h1>Welcome to the feedback system is loggedin ? {{loggedIn}}</h1>
     <template is="dom-if" if="{{loggedIn}}">
       You already logged in to the system
     </template>
     <template is="dom-if" if="{{!loggedIn}}">
       <form is="iron-form" method="get" action="/" on-iron-form-submit="_login" id="basic">
-        <paper-input name="email" label="Email"></paper-input>
+        <paper-input name="user" label="User"></paper-input>
         <br>
         <paper-input name="password" type="password" label="Password"></paper-input>
         <br>
@@ -45,21 +45,43 @@
       properties: {
         loggedIn : {
           type: Boolean,
-          value: false
+          value: false,
+          notify: true
         }
+      },
+
+      attached: function () {
+        // automatically update the value on attached
+        this.loggedIn = authService.isLoggedIn();
+        console.log('attached');
+        console.log(this.loggedIn);
       },
 
       /**
       * Handles the request to the server with the credentials.
       */
       _login: function (ev) {
-        console.log('requesting using credentials');
-        console.log(ev.detail);
-        // TODO: request the login session
-        // in case of success
-        // TODO: save some easy user info: email, name, userType, token
-        // in case of failure
-        // TODO: display the error message to the user
+        var self = this;
+        // TODO: refactor base URL into a separate file
+        reqwest({
+          url: 'http://localhost:3030/login',
+          method: 'post',
+          data: ev.detail,
+          crosOrigin: true,
+          success: function (data) {
+            if (data.status === 'ok') {
+              self.loggedIn = true;
+              console.log(data);
+              authService.authorizeUser(data);
+            } else {
+
+            }
+          },
+          error: function (err) {
+            console.error(':(', err);
+            // TODO: display error
+          }
+        });
       },
 
       /**
