@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../components/ow-page-card.html">
+<link rel="import" href="../components/create-question.html">
 
 <dom-module id="create-survey">
 
@@ -15,8 +16,14 @@
 
     <ow-page-card>
       <h1>Create a survey</h1>
-      <paper-input required auto-validate error-message="Please add a valid survey title" autofocus min-length="7" name="title" value="{{title}}" label="Title"></paper-input>
-      <paper-button raised class="custom green" on-tap="_createSurvey">Create</paper-button>
+      <paper-input disabled="[[enableQuestion]]" required auto-validate error-message="Please add a valid survey title" autofocus min-length="7" name="title" value="{{title}}" label="Title"></paper-input>
+      <paper-button disabled="[[enableQuestion]]" raised class="custom green" on-tap="_createSurvey">Create</paper-button>
+
+      <hr>
+      <template is="dom-if" if="[[enableQuestion]]">
+        <ow-create-question>
+        </ow-create-question>
+      </template>
     </ow-page-card>
 
   </template>
@@ -30,6 +37,10 @@
       properties: {
         title: {
           type: String
+        },
+        enableQuestion: {
+          type: Boolean,
+          value: false
         }
       },
 
@@ -41,26 +52,28 @@
           return false;
         }
 
-        reqwest({
-          url: appConfig.baseAPI + '/survies',
-          method: 'post',
-          data: this.title,
-          crosOrigin: true,
-          // TODO: add authorization header!
-          success: function (data) {
-            console.log(data);
-            if (data.status === 'ok') {
-              // TODO: display a message that it was properly created
-            } else {
-              // TODO: display error message
-            }
-          },
-          error: function (err) {
-            console.error('error!', err);
-            // TODO: display error message
-          }
-        });
-      }
+        // reqwest({
+        //   url: appConfig.baseAPI + '/survies',
+        //   method: 'post',
+        //   data: this.title,
+        //   crosOrigin: true,
+        //   // TODO: add authorization header!
+        //   success: function (data) {
+        //     console.log(data);
+        //     if (data.status === 'ok') {
+        //       // TODO: display a message that it was properly created
+        //     } else {
+        //       // TODO: display error message
+        //     }
+        //   },
+        //   error: function (err) {
+        //     console.error('error!', err);
+        //     // TODO: display error message
+        //   }
+        // });
+
+        this.enableQuestion = true;
+      },
 
     });
 

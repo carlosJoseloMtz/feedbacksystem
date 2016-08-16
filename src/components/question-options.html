@@ -1,0 +1,83 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+
+<!-- custom imports -->
+<link rel="import" href="question-option.html">
+
+<dom-module id="question-options">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .yeap {
+        display: block;
+      }
+
+      .nope {
+        display: none;
+      }
+    </style>
+
+    <div class$="[[displayClass]]">
+      <h5>Question Options</h5>
+      <template is="dom-repeat" items="{{options}}" as="_opt" >
+        <question-option option="[[_opt]]"></question-option>
+      </template>
+      <h4>Create an option</h4>
+      <paper-input id="option" label="New Option" required auto-validate error-message="Please add a valid option" autofocus min-length="7" name="option" value="{{option}}"></paper-input>
+      <paper-fab on-click="_createOption" disabled="{{!isValidOption}}" icon="add"></paper-fab>
+    </div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'question-options',
+
+      properties: {
+        questionId: {
+          type: String,
+          value: ''
+        },
+
+        option: {
+          type: String
+        },
+
+        isValidOption: {
+          type: String,
+          computed: '_checkOption(option)'
+        },
+
+        options: {
+          type: Array,
+          value: function () { return [{option: 'some'}]; }
+        }
+      },
+
+      _checkOption: function () {
+        return this.$.option.validate();
+      },
+
+      _createOption: function () {
+        if (!this._checkOption()) {
+          return false;
+        }
+        // TODO: call service to add an option to a specific question
+        this.push('options', {option: this.option, id: 'some-id-from-server'})
+        this.option = '';
+        this.$.option.focus();
+      }
+
+
+    });
+
+  </script>
+
+</dom-module>

@@ -1,0 +1,68 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+
+<dom-module id="question-option">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .option {
+        color: #424242;
+        padding: 7px 20px;
+      }
+
+      .option:hover {
+        color: #212121;
+        background-color: #F5F5F5;
+      }
+
+      .delete {
+        float: right;
+      }
+
+      .delete:hover {
+        color: #F44336;
+      }
+
+    </style>
+
+    <div id="option" class="option">
+      <div id="delete" on-click="_deleteOption" class="delete">
+        <iron-icon icon="icons:delete"></iron-icon>
+      </div>
+      <!-- TODO: transform the text into a input field when clicking the element to edit the record -->
+      [[option.option]]
+    </div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'question-option',
+
+      properties: {
+
+        option: {
+          type: Object,
+          value: function () { return {}; }
+        },
+
+      },
+
+      _deleteOption: function () {
+        console.log('deleting option!', this.option.id);
+        // TODO: call web service to delete the option
+      }
+
+    });
+
+  </script>
+
+</dom-module>
