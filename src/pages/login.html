@@ -3,6 +3,8 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../components/ow-page-card.html">
+
 <dom-module id="login-page">
 
   <template>
@@ -19,20 +21,21 @@
         color: white;
       }
     </style>
-
-    <h1>Welcome to the feedback system is loggedin ? {{loggedIn}}</h1>
-    <template is="dom-if" if="{{loggedIn}}">
-      You already logged in to the system
-    </template>
-    <template is="dom-if" if="{{!loggedIn}}">
-      <form is="iron-form" method="get" action="/" on-iron-form-submit="_login" id="basic">
-        <paper-input name="user" label="User"></paper-input>
-        <br>
-        <paper-input name="password" type="password" label="Password"></paper-input>
-        <br>
-        <paper-button raised class="custom green" on-tap="_submit">Submit</paper-button>
-      </form>
-    </template>
+    <ow-page-card>
+      <h1>Welcome to the feedback system is loggedin ? {{loggedIn}}</h1>
+      <template is="dom-if" if="{{loggedIn}}">
+        You already logged in to the system
+      </template>
+      <template is="dom-if" if="{{!loggedIn}}">
+        <form is="iron-form" method="get" on-iron-form-submit="_login">
+          <paper-input name="user" label="User"></paper-input>
+          <br>
+          <paper-input name="password" type="password" label="Password"></paper-input>
+          <br>
+          <paper-button raised class="custom green" on-tap="_submit">Submit</paper-button>
+        </form>
+      </template>
+    </ow-page-card>
 
   </template>
 
@@ -64,7 +67,7 @@
         var self = this;
         // TODO: refactor base URL into a separate file
         reqwest({
-          url: 'http://localhost:3030/login',
+          url: appConfig.baseUrl + 'login',
           method: 'post',
           data: ev.detail,
           crosOrigin: true,

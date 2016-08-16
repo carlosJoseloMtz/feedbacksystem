@@ -1,4 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../components/ow-page-card.html">
 
 <dom-module id="create-survey">
 
@@ -10,14 +13,11 @@
       }
     </style>
 
-    <div class="page-card">
+    <ow-page-card>
       <h1>Create a survey</h1>
-      <div class="">
-        Here you can create a survey that will be assigned to a specific user/group
-      </div>
-
-
-    </div>
+      <paper-input required auto-validate error-message="Please add a valid survey title" autofocus min-length="7" name="title" value="{{title}}" label="Title"></paper-input>
+      <paper-button raised class="custom green" on-tap="_createSurvey">Create</paper-button>
+    </ow-page-card>
 
   </template>
 
@@ -25,7 +25,42 @@
 
     Polymer({
 
-      is: 'create-survey'
+      is: 'create-survey',
+
+      properties: {
+        title: {
+          type: String
+        }
+      },
+
+      _createSurvey: function () {
+        console.log('creating survey');
+        console.log(this.title);
+
+        if (!this.title) {
+          return false;
+        }
+
+        reqwest({
+          url: appConfig.baseAPI + '/survies',
+          method: 'post',
+          data: this.title,
+          crosOrigin: true,
+          // TODO: add authorization header!
+          success: function (data) {
+            console.log(data);
+            if (data.status === 'ok') {
+              // TODO: display a message that it was properly created
+            } else {
+              // TODO: display error message
+            }
+          },
+          error: function (err) {
+            console.error('error!', err);
+            // TODO: display error message
+          }
+        });
+      }
 
     });
 
