@@ -16,18 +16,22 @@
         display: block;
       }
 
+      paper-fab {
+        float: right;
+      }
+
     </style>
 
 
     <h4>Create a question</h4>
-    <paper-input tab-index="0" id="question" label="New Question" required auto-validate error-message="Please add a valid question" autofocus min-length="7" name="question" value="{{question}}"></paper-input>
+    <paper-input disabled="{{questionCreated}}" tab-index="0" id="question" label="New Question" required auto-validate error-message="Please add a valid question" autofocus min-length="7" name="question" value="{{question}}"></paper-input>
     <paper-radio-group selected="{{questionType}}" aria-labelledby="Question type">
       <paper-radio-button value="{{questionType}}" name="open">Open Question</paper-radio-button>
       <paper-radio-button value="{{questionType}}" name="optional">Optional</paper-radio-button>
     </paper-radio-group>
-    <paper-fab on-click="_createQuestion" disabled="{{!validQuestion}}" icon="add"></paper-fab>
+    <paper-fab on-click="_createQuestion" id="createQuestionBtn" disabled="{{!validQuestion}}" icon="add"></paper-fab>
 
-    <template is="dom-if" if="{{questionCreated}}">
+    <template is="dom-if" if="{{isOptional}}">
       <question-options>
       </question-options>
     </template>
@@ -60,29 +64,36 @@
         questionCreated: {
           type: Boolean,
           value: false
+        },
+
+        isOptional: {
+          type: Boolean,
+          value: false
         }
+      },
+
+      ready: function () {
+        this.$.question.focus();
       },
 
       _isQuestionValid: function(question, questionType) {
 
+
+        this.isOptional = this.questionType === 'optional';
+
         if (this.$.question.validate()) {
-
-          if (questionType === 'optional') {
-            // TODO display component to capture the options
-          }
-
           return true;
         }
 
         return false;
       },
 
-      _createQuestion: function (ev) {
-        // TODO: request the question creation
-        this.questionCreated = true;
-        console.log('clicked :V');
+      _createQuestion: function () {
+        if (this._isQuestionValid()) {
+          this.questionCreated = true;
+          this.$.createQuestionBtn.disabled = true;
+        }
       }
-
     });
 
   </script>

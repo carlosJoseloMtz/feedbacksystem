@@ -13,19 +13,15 @@
         display: block;
       }
 
-      .yeap {
-        display: block;
-      }
-
-      .nope {
-        display: none;
+      paper-fab {
+        float: right;
       }
     </style>
 
     <div class$="[[displayClass]]">
       <h5>Question Options</h5>
       <template is="dom-repeat" items="{{options}}" as="_opt" >
-        <question-option option="[[_opt]]"></question-option>
+        <question-option on-option-deleted="_onOptionDeleted" option="[[_opt]]"></question-option>
       </template>
       <h4>Create an option</h4>
       <paper-input id="option" label="New Option" required auto-validate error-message="Please add a valid option" autofocus min-length="7" name="option" value="{{option}}"></paper-input>
@@ -57,7 +53,7 @@
 
         options: {
           type: Array,
-          value: function () { return [{option: 'some'}]; }
+          value: function () { return []; }
         }
       },
 
@@ -70,9 +66,40 @@
           return false;
         }
         // TODO: call service to add an option to a specific question
-        this.push('options', {option: this.option, id: 'some-id-from-server'})
+        this.push('options', {option: this.option, id: this._getRandomId()});
         this.option = '';
         this.$.option.focus();
+      },
+
+      // FIXME: will not use this function but for testing is good
+      _getRandomId: function () {
+        return Math.floor(Math.random() * (50000 - 5)) + 5;
+      },
+
+      _onOptionDeleted: function (e, detail) {
+        var index = this._getIndexOfOption(detail.id);
+        if (index > -1) {
+          this.splice('options', index, 1);
+        } else {
+          console.warn('not found!');
+          console.log(this.options);
+          // TODO: decide what to do, should never happen, though
+        }
+      },
+
+      /**
+      * Finds an option based on the id.
+      */
+      _getIndexOfOption: function (_id) {
+        var index = -1;
+        for (var opt = 0; opt < this.options.length; opt++) {
+          if (this.options[opt].id === _id) {
+            index = opt;
+            break;
+          }
+        }
+
+        return index;
       }
 
 

@@ -57,8 +57,9 @@
       },
 
       _deleteOption: function () {
-        console.log('deleting option!', this.option.id);
+        // console.log('deleting option!', this.option.id);
         // TODO: call web service to delete the option
+        this.fire('option-deleted', {id: this.option.id});
       }
 
     });
